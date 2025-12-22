@@ -13,7 +13,6 @@ User = get_user_model()
 
 
 class PublishedQuerySet(models.QuerySet):
-
     def filter_posts_for_publication(self):
         return self.filter(
             pub_date__lte=timezone.now(),
@@ -24,11 +23,12 @@ class PublishedQuerySet(models.QuerySet):
     def count_comments(self):
         return self.select_related(
             'category', 'location', 'author'
-        ).annotate(comment_count=Count('comments')).order_by('-pub_date')
+        ).annotate(
+            comment_count=Count('comments')
+        ).order_by(*Post._meta.ordering)
 
 
 class Category(CreatedAt, IsPublished):
-
     title = models.CharField('Заголовок', max_length=MAX_LENGTH)
     description = models.TextField('Описание')
     slug = models.SlugField(
@@ -39,7 +39,7 @@ class Category(CreatedAt, IsPublished):
     )
 
     class Meta:
-        verbose_name = 'категория'
+        verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
     def __str__(self):
@@ -47,11 +47,10 @@ class Category(CreatedAt, IsPublished):
 
 
 class Location(CreatedAt, IsPublished):
-
     name = models.CharField('Название места', max_length=MAX_LENGTH)
 
     class Meta:
-        verbose_name = 'местоположение'
+        verbose_name = 'Местоположение'
         verbose_name_plural = 'Местоположения'
 
     def __str__(self):
@@ -59,7 +58,6 @@ class Location(CreatedAt, IsPublished):
 
 
 class Post(CreatedAt, IsPublished):
-
     title = models.CharField('Заголовок', max_length=MAX_LENGTH)
     text = models.TextField('Текст')
     pub_date = models.DateTimeField(
@@ -93,7 +91,7 @@ class Post(CreatedAt, IsPublished):
     )
 
     class Meta:
-        verbose_name = 'публикация'
+        verbose_name = 'Публикация'
         verbose_name_plural = 'Публикации'
         ordering = ('-pub_date',)
 
@@ -104,7 +102,6 @@ class Post(CreatedAt, IsPublished):
 
 
 class Comment(CreatedAt):
-
     text = models.TextField('Текст')
     post = models.ForeignKey(
         Post,
@@ -121,7 +118,7 @@ class Comment(CreatedAt):
 
     class Meta:
         ordering = ('created_at',)
-        verbose_name = 'комментарий'
+        verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
