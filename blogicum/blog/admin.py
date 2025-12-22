@@ -7,9 +7,12 @@ from .models import Category, Comment, Location, Post
 LENGTH_STRING = 50
 NUMBER_OF_POSTS = 10
 User = get_user_model()
+admin.site.unregister(User)
 
 
-admin.site.register(User, UserAdmin)
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    pass
 
 
 @admin.register(Post)
