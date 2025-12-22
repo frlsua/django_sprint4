@@ -91,7 +91,7 @@ class CommentCreateView(CommentView, CreateView):
         return super().form_valid(form)
 
 
-class CreatePostView(LoginRequiredMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
