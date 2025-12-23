@@ -128,7 +128,7 @@ class CategoryDetailView(ListView):
         return context
 
     def get_queryset(self):
-        return self.get_category().posts.filter_posts_for_publication()
+        return self.get_category().posts.filter_posts_for_publication().count_comments()
 
 
 class ProfileView(ListView):
